@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MuffinStoreJailed — docs</title>
+<meta name="description" content="MuffinStoreJailed: on-device App Store client for iOS app downgrades. No jailbreak.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="./index.html"><span class="sigil">~/</span>xscope0</a>
+    <div class="nav-links">
+      <a href="./xscope0-router.html">router</a>
+      <a href="./ghostbox.html">ghostbox</a>
+      <a href="./muffinstore.html">muffinstore</a>
+      <a href="https://github.com/xscope0/MuffinStoreJailed" target="_blank" rel="noopener">repo&nbsp;↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap doc">
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#what">What it does</a>
+    <a href="#usage">How to use</a>
+    <a href="#issues">Known issues</a>
+    <a href="#build">Build</a>
+    <a href="#install">Install</a>
+    <a href="#disclaimer">Disclaimer</a>
+    <a href="#credits">Credits</a>
+  </aside>
+
+  <div class="doc-body">
+    <div class="doc-hero">
+      <div class="crumb"><a href="./index.html">~/projects</a> / muffinstorejailed</div>
+      <h1>MuffinStoreJailed</h1>
+      <p class="sub">On-device App Store client for iOS app downgrades. No jailbreak required.</p>
+      <div class="badges">
+        <span class="badge">Swift</span>
+        <span class="badge"><span class="k">ios</span> 14.0+</span>
+        <span class="badge red">deprecated · PoC</span>
+        <span class="badge">AGPL-3.0</span>
+      </div>
+    </div>
+
+    <div class="note warn">
+      <span class="lbl">Status</span>
+      This is a proof of concept, not a final product. Use <a href="https://github.com/mineek/MuffinStore" target="_blank" rel="noopener">TrollStore MuffinStore</a> instead if you can.
+    </div>
+
+    <h2 id="overview"><span class="hashtag">#</span>Overview</h2>
+    <p>MuffinStoreJailed is a fork of <a href="https://github.com/mineek/MuffinStoreJailed-Public" target="_blank" rel="noopener">mineek/MuffinStoreJailed-Public</a>. It runs entirely on-device and lets you roll an installed app back to an older release without a jailbreak.</p>
+
+    <h2 id="what"><span class="hashtag">#</span>What it does</h2>
+    <p>Downgrade any iOS app to a previous version. It exploits Apple's App Store download API to fetch older IPA files signed with your Apple ID — and works without a jailbreak.</p>
+
+    <h2 id="usage"><span class="hashtag">#</span>How to use</h2>
+    <ol class="steps">
+      <li>
+        <strong>Uninstall the target app</strong>
+        The app must be removed before downgrading. To keep your data, offload it first
+        (Settings → General → iPhone Storage → Offload App), then uninstall.
+      </li>
+      <li>
+        <strong>Request a 2FA code</strong>
+        Before logging in, open Settings and request a 2FA code. On iOS 18+ the Settings
+        option may not appear — leave the code field empty in the app and a popup will ask
+        you to approve the login; copy the code from there. If login fails, force-close the
+        app and retry.
+      </li>
+      <li>
+        <strong>Sign in &amp; search</strong>
+        Sign in with your Apple ID, then search for the app you want to downgrade.
+      </li>
+      <li>
+        <strong>Select the target version</strong>
+        Pick the version you want from the list.
+      </li>
+      <li>
+        <strong>Wait for the install popup</strong>
+        There is no progress bar. Stay on the screen until an installation popup appears —
+        time depends on app size.
+      </li>
+      <li>
+        <strong>Install &amp; finalize</strong>
+        Press Install, wait ~5 seconds, then return to SpringBoard. The downgrade finalizes
+        automatically.
+      </li>
+    </ol>
+    <div class="note danger">
+      <span class="lbl">No progress bar</span>
+      Downloads give no visual feedback. Do not leave the screen until the install popup shows.
+    </div>
+
+    <h2 id="issues"><span class="hashtag">#</span>Known issues</h2>
+    <ul>
+      <li>No progress indicator during download</li>
+      <li>UI is rough — this is a PoC</li>
+      <li>2FA flow is inconsistent across iOS versions</li>
+      <li>Some apps may not have older versions available on Apple's CDN</li>
+    </ul>
+
+    <h2 id="build"><span class="hashtag">#</span>Build</h2>
+    <pre><code><span class="k">git</span> clone https://github.com/xscope0/MuffinStoreJailed.git
+<span class="k">cd</span> MuffinStoreJailed
+<span class="k">make</span></code></pre>
+    <p>Or open <code class="inline">MuffinStoreJailed.xcodeproj</code> in Xcode.</p>
+    <p><strong>Requirements:</strong> iOS 14.0+, Xcode 14+, and a sideload method
+      (<a href="https://github.com/opa334/TrollStore" target="_blank" rel="noopener">TrollStore</a> /
+      <a href="https://altstore.io" target="_blank" rel="noopener">AltStore</a> /
+      <a href="https://sideloadly.io" target="_blank" rel="noopener">Sideloadly</a>).</p>
+
+    <h2 id="install"><span class="hashtag">#</span>Install</h2>
+    <p>Grab a pre-built IPA from <a href="https://github.com/xscope0/MuffinStoreJailed/releases" target="_blank" rel="noopener">Releases</a>, then sideload it:</p>
+    <table class="tbl">
+      <thead><tr><th>Method</th><th>Steps</th></tr></thead>
+      <tbody>
+        <tr><td><strong>TrollStore</strong></td><td>Download <code>.ipa</code>, open with TrollStore</td></tr>
+        <tr><td><strong>AltStore</strong></td><td>Sideload via AltStore. Re-sign every 7 days (free ID)</td></tr>
+        <tr><td><strong>Sideloadly</strong></td><td>Sideload via Sideloadly</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="disclaimer"><span class="hashtag">#</span>Disclaimer</h2>
+    <p>Experimental tool — use at your own risk. Apple ID credentials are used locally; nothing is sent to third-party servers. Apple may detect unusual API usage. No warranty, no guarantee. Downgraded apps may have compatibility issues with newer iOS versions.</p>
+
+    <h2 id="credits"><span class="hashtag">#</span>Credits</h2>
+    <p>Original project by <a href="https://github.com/mineek" target="_blank" rel="noopener">mineek</a>. See <a href="https://github.com/mineek/MuffinStoreJailed-Public" target="_blank" rel="noopener">MuffinStoreJailed-Public</a> for the official source. Licensed AGPL-3.0.</p>
+
+    <div class="hero-cta" style="margin-top:36px">
+      <a class="btn primary" href="https://github.com/xscope0/MuffinStoreJailed" target="_blank" rel="noopener">View repository ↗</a>
+      <a class="btn" href="./index.html">← Back to projects</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© <span class="yr"></span> xscope0 — docs</span>
+    <span><a href="https://github.com/xscope0/MuffinStoreJailed" target="_blank" rel="noopener">MuffinStoreJailed</a></span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());</script>
+<script src="./assets/main.js"></script>
+</body>
+</html>

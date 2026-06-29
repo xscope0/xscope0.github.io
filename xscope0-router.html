@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>xScope0 Router — docs</title>
+<meta name="description" content="xScope0 Router: AI API proxy router with provider automation, account pools and a dashboard.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="./index.html"><span class="sigil">~/</span>xscope0</a>
+    <div class="nav-links">
+      <a href="./xscope0-router.html">router</a>
+      <a href="./ghostbox.html">ghostbox</a>
+      <a href="./muffinstore.html">muffinstore</a>
+      <a href="https://github.com/xscope0/xScope0-Router" target="_blank" rel="noopener">repo&nbsp;↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap doc">
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#features">Features</a>
+    <a href="#install">Install</a>
+    <a href="#endpoints">Endpoints</a>
+    <a href="#build">Build from source</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#dependencies">Dependencies</a>
+    <a href="#license">License</a>
+  </aside>
+
+  <div class="doc-body">
+    <div class="doc-hero">
+      <div class="crumb"><a href="./index.html">~/projects</a> / xscope0-router</div>
+      <h1>xScope0 Router</h1>
+      <p class="sub">An AI API proxy router with provider automation — one unified endpoint in front of many providers, with automatic failover, rotation and account-pool management.</p>
+      <div class="badges">
+        <span class="badge green">v0.5.12</span>
+        <span class="badge"><span class="k">node</span> &gt;=18</span>
+        <span class="badge"><span class="k">license</span> MIT</span>
+        <span class="badge">JavaScript</span>
+      </div>
+    </div>
+
+    <h2 id="overview"><span class="hashtag">#</span>Overview</h2>
+    <p>xScope0 Router sits between your client and a pool of AI providers. You point your app at a single local endpoint, and the router handles authentication, account rotation and failover behind the scenes. It ships with a dashboard for managing accounts and watching traffic.</p>
+    <div class="fgrid">
+      <div class="fitem"><h4>Dashboard</h4><p><code class="inline">http://localhost:20128/dashboard</code></p></div>
+      <div class="fitem"><h4>API endpoint</h4><p><code class="inline">http://localhost:20128/v1</code></p></div>
+    </div>
+    <div class="note">
+      <span class="lbl">Heads up</span>
+      This is a modified fork of <a href="https://github.com/decolua/9router" target="_blank" rel="noopener">9router</a> with custom branding, hardened TokenSaver paths and the donate / remote UI removed.
+    </div>
+
+    <h2 id="features"><span class="hashtag">#</span>Features</h2>
+    <h3>Core</h3>
+    <ul>
+      <li>Unified API proxy endpoint for multiple AI providers</li>
+      <li>Automatic provider failover and rotation</li>
+      <li>Account-pool management with bulk operations</li>
+      <li>SQLite-backed persistent storage</li>
+      <li>System-tray integration (macOS / Linux / Windows)</li>
+    </ul>
+    <h3>Provider automation</h3>
+    <ul>
+      <li>Mimo Code Free + OpenCode Free proxy automation</li>
+      <li>Proxy-pool selection with auto-rotation on 5 / 10 / 15-minute intervals</li>
+      <li>Automatic rotation on rate-limit or provider errors (incl. Mimo 400 / 441)</li>
+      <li>Provider-wide <code class="inline">Error → inactive</code> policy for account providers</li>
+      <li>Kiro temporary-suspension handling</li>
+    </ul>
+    <h3>Account management</h3>
+    <ul>
+      <li>Bulk-delete selected, inactive or deactivated accounts</li>
+      <li>Bulk API-key import (appends; does not replace same-name accounts)</li>
+      <li>Proxy-pool force-delete unbinds accounts first</li>
+    </ul>
+
+    <h2 id="install"><span class="hashtag">#</span>Install</h2>
+    <p>Install globally and run the binary:</p>
+    <pre><code><span class="k">npm</span> install -g xscope0-modifed-router
+<span class="k">9router</span></code></pre>
+    <p>Or run it directly without installing:</p>
+    <pre><code><span class="k">npx</span> xscope0-modifed-router</code></pre>
+    <div class="note">
+      <span class="lbl">Tip</span>
+      The package exposes both <code class="inline">9router</code> and <code class="inline">xscope0-router</code> binaries for compatibility.
+    </div>
+
+    <h2 id="endpoints"><span class="hashtag">#</span>Endpoints</h2>
+    <table class="tbl">
+      <thead><tr><th>Surface</th><th>URL</th><th>Use</th></tr></thead>
+      <tbody>
+        <tr><td>Dashboard</td><td><code>/dashboard</code></td><td>Manage accounts, pools, rotation</td></tr>
+        <tr><td>API</td><td><code>/v1</code></td><td>OpenAI-compatible proxy endpoint</td></tr>
+      </tbody>
+    </table>
+    <p>Point your client's base URL at the local endpoint:</p>
+    <pre><code><span class="c"># example: OpenAI-style client</span>
+<span class="v">base_url</span> = <span class="s">"http://localhost:20128/v1"</span></code></pre>
+
+    <h2 id="build"><span class="hashtag">#</span>Build from source</h2>
+    <pre><code><span class="k">npm</span> install
+<span class="k">npm</span> run build
+<span class="k">npm</span> pack</code></pre>
+    <p>Build output: <code class="inline">xscope0-modifed-router-x.x.x.tgz</code></p>
+
+    <h2 id="architecture"><span class="hashtag">#</span>Architecture</h2>
+    <pre><code>xscope0-modifed-router/
+├── cli.js                 <span class="c"># Entry point, process mgmt, system tray</span>
+├── src/
+│   └── cli/               <span class="c"># Core CLI modules</span>
+├── app/
+│   ├── server.js          <span class="c"># Express server, API routes</span>
+│   ├── custom-server.js   <span class="c"># Custom HTTP server setup</span>
+│   ├── next.config.mjs    <span class="c"># Next.js configuration</span>
+│   └── package.json       <span class="c"># App deps (React, Next.js)</span>
+├── hooks/
+│   ├── postinstall.js     <span class="c"># Runtime dependency installation</span>
+│   ├── sqliteRuntime.js   <span class="c"># SQLite native module management</span>
+│   └── trayRuntime.js     <span class="c"># System tray binary management</span>
+├── scripts/
+│   └── build-cli.js       <span class="c"># esbuild bundler script</span>
+├── assets/preview/        <span class="c"># Screenshot assets</span>
+├── package.json
+└── LICENSE</code></pre>
+
+    <h2 id="dependencies"><span class="hashtag">#</span>Dependencies</h2>
+    <table class="tbl">
+      <thead><tr><th>Package</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>enquirer</code></td><td>Interactive CLI prompts</td></tr>
+        <tr><td><code>node-forge</code></td><td>Cryptographic operations</td></tr>
+        <tr><td><code>node-machine-id</code></td><td>Device identification</td></tr>
+        <tr><td><code>react</code> / <code>react-dom</code></td><td>Dashboard UI</td></tr>
+        <tr><td><code>sql.js</code> / <code>better-sqlite3</code></td><td>Database (installed at runtime)</td></tr>
+        <tr><td><code>systray2</code></td><td>System tray (installed at runtime)</td></tr>
+      </tbody>
+    </table>
+    <div class="note warn">
+      <span class="lbl">Runtime install</span>
+      Native modules (<code class="inline">sql.js</code>, <code class="inline">better-sqlite3</code>, <code class="inline">systray2</code>) install into <code class="inline">~/.9router/runtime/node_modules</code> via <code class="inline">hooks/postinstall.js</code> to avoid Windows EBUSY errors during CLI updates.
+    </div>
+
+    <h2 id="license"><span class="hashtag">#</span>License</h2>
+    <p>MIT. Original project: <a href="https://github.com/decolua/9router" target="_blank" rel="noopener">9router</a>.</p>
+
+    <div class="hero-cta" style="margin-top:36px">
+      <a class="btn primary" href="https://github.com/xscope0/xScope0-Router" target="_blank" rel="noopener">View repository ↗</a>
+      <a class="btn" href="./index.html">← Back to projects</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© <span class="yr"></span> xscope0 — docs</span>
+    <span><a href="https://github.com/xscope0/xScope0-Router" target="_blank" rel="noopener">xScope0-Router</a></span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());</script>
+<script src="./assets/main.js"></script>
+</body>
+</html>

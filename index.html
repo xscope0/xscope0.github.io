@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>xscope0 — projects &amp; docs</title>
+<meta name="description" content="Documentation for xscope0's projects: xScope0 Router, Ghostbox, and MuffinStoreJailed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="./index.html"><span class="sigil">~/</span>xscope0</a>
+    <div class="nav-links">
+      <a href="./xscope0-router.html">router</a>
+      <a href="./ghostbox.html">ghostbox</a>
+      <a href="./muffinstore.html">muffinstore</a>
+      <a href="https://github.com/xscope0" target="_blank" rel="noopener">github↗</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="term-prompt"><span class="arrow">root@xscope0:~$</span> ./whoami<span class="blink"></span></div>
+    <h1>Small, sharp tools<br>built to be <span class="grad">taken apart.</span></h1>
+    <p class="lead">Three projects, three problems: routing AI traffic, spinning up disposable inboxes, and downgrading iOS apps without a jailbreak. Pick one — the docs go deep.</p>
+    <div class="hero-cta">
+      <a class="btn primary" href="#projects">Browse projects</a>
+      <a class="btn" href="https://github.com/xscope0" target="_blank" rel="noopener">@xscope0 ↗</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="projects">
+    <div class="section-head">
+      <span class="idx">INDEX</span>
+      <h2>Projects</h2>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="./xscope0-router.html" data-reveal>
+        <span class="num">01</span>
+        <div>
+          <span class="tag">Node.js · CLI</span>
+          <h3>xScope0 Router</h3>
+          <p>A unified AI API proxy: automatic provider failover, account-pool management, and a built-in dashboard sitting in front of many providers.</p>
+          <div class="chips"><span class="chip">proxy</span><span class="chip">SQLite</span><span class="chip">tray</span></div>
+        </div>
+        <div class="meta">v0.5.12 · MIT<span class="go">read docs →</span></div>
+      </a>
+
+      <a class="card" href="./ghostbox.html" data-reveal>
+        <span class="num">02</span>
+        <div>
+          <span class="tag">Vanilla JS · Static</span>
+          <h3>Ghostbox</h3>
+          <p>Disposable email with automatic OTP extraction, bulk inboxes, and an agent API. Zero tracking, no framework, no build step.</p>
+          <div class="chips"><span class="chip">temp-mail</span><span class="chip">OTP</span><span class="chip">Supabase</span></div>
+        </div>
+        <div class="meta">MIT<span class="go">read docs →</span></div>
+      </a>
+
+      <a class="card" href="./muffinstore.html" data-reveal>
+        <span class="num">03</span>
+        <div>
+          <span class="tag">Swift · iOS</span>
+          <h3>MuffinStoreJailed</h3>
+          <p>On-device App Store client that downgrades iOS apps to older versions. No jailbreak required. A proof of concept, documented honestly.</p>
+          <div class="chips"><span class="chip">iOS</span><span class="chip">sideload</span><span class="chip">PoC</span></div>
+        </div>
+        <div class="meta">AGPL-3.0<span class="go">read docs →</span></div>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-head">
+      <span class="idx">NOTE</span>
+      <h2>What this is</h2>
+    </div>
+    <p style="color:var(--txt-dim);max-width:62ch">
+      A documentation hub, not a pitch. Each project gets a full reference — install,
+      configuration, architecture, API surface, and the gotchas worth knowing before you
+      run it. Everything here is plain HTML, CSS, and a little vanilla JS: it loads
+      instantly and deploys to GitHub Pages with no build step.
+    </p>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© <span class="yr"></span> xscope0</span>
+    <span><a href="https://github.com/xscope0" target="_blank" rel="noopener">github.com/xscope0</a></span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());</script>
+<script src="./assets/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghostbox — docs</title>
+<meta name="description" content="Ghostbox: disposable email with OTP extraction, bulk inboxes and an agent API. Static, zero tracking.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="brand" href="./index.html"><span class="sigil">~/</span>xscope0</a>
+    <div class="nav-links">
+      <a href="./xscope0-router.html">router</a>
+      <a href="./ghostbox.html">ghostbox</a>
+      <a href="./muffinstore.html">muffinstore</a>
+      <a href="https://github.com/xscope0/Ghostbox" target="_blank" rel="noopener">repo&nbsp;↗</a>
+    </div>
+  </div>
+</nav>
+
+<div class="wrap doc">
+
+  <aside class="toc">
+    <div class="toc-title">On this page</div>
+    <a href="#overview">Overview</a>
+    <a href="#quickstart">Quick start</a>
+    <a href="#features">Features</a>
+    <a href="#agent-api">Agent API</a>
+    <a href="#config">Configuration</a>
+    <a href="#stack">Tech stack</a>
+    <a href="#architecture">Architecture</a>
+    <a href="#otp">OTP extraction</a>
+    <a href="#deploy">Deployment</a>
+    <a href="#shortcuts">Shortcuts</a>
+  </aside>
+
+  <div class="doc-body">
+    <div class="doc-hero">
+      <div class="crumb"><a href="./index.html">~/projects</a> / ghostbox</div>
+      <h1>Ghostbox</h1>
+      <p class="sub">Disposable email. OTP extraction. Zero tracking. A framework-free temp-mail client that ships as static HTML/CSS/JS — no bundler, no build step.</p>
+      <div class="badges">
+        <span class="badge">temp-mail</span>
+        <span class="badge"><span class="k">stack</span> vanilla JS</span>
+        <span class="badge"><span class="k">backend</span> Supabase</span>
+        <span class="badge green">MIT</span>
+      </div>
+    </div>
+
+    <h2 id="overview"><span class="hashtag">#</span>Overview</h2>
+    <p>Ghostbox generates instant disposable inboxes, auto-detects verification codes inside incoming mail, and exposes a small API so AI agents and scripts can use it programmatically. The frontend is plain ES modules and CSS custom properties; Supabase handles storage and realtime.</p>
+
+    <h2 id="quickstart"><span class="hashtag">#</span>Quick start</h2>
+    <pre><code><span class="k">git</span> clone https://github.com/xscope0/temp-mail.git
+<span class="k">cd</span> temp-mail
+<span class="k">cp</span> js/config.example.js js/config.js   <span class="c"># add your Supabase creds</span>
+<span class="k">npm</span> install
+<span class="k">npm</span> run dev                             <span class="c"># http://localhost:3000</span></code></pre>
+    <div class="note">
+      <span class="lbl">No build</span>
+      No bundler. No framework. Ships as static HTML/CSS/JS — you can also just open the files on any static host.
+    </div>
+
+    <h2 id="features"><span class="hashtag">#</span>Features</h2>
+    <table class="tbl">
+      <thead><tr><th>Feature</th><th>Description</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Inbox generation</strong></td><td>Instant disposable addresses, no signup</td></tr>
+        <tr><td><strong>OTP extraction</strong></td><td>Auto-detects 2FA codes, verification links, PINs</td></tr>
+        <tr><td><strong>Bulk mode</strong></td><td>Create up to 999 inboxes at once</td></tr>
+        <tr><td><strong>Lifetime Pro</strong></td><td>IMAP/SMTP credentials for persistent inboxes</td></tr>
+        <tr><td><strong>GitHub helper</strong></td><td>Auto-fill signup fields with temp credentials</td></tr>
+        <tr><td><strong>Agent API</strong></td><td>Programmatic access via URL params or JS</td></tr>
+        <tr><td><strong>Multilingual</strong></td><td>English, Chinese, Indonesian</td></tr>
+        <tr><td><strong>Dark mode</strong></td><td>System preference detection + manual toggle</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="agent-api"><span class="hashtag">#</span>Agent API</h2>
+    <h3>URL mode</h3>
+    <p>Append <code class="inline">?api=&lt;action&gt;</code> to the page URL:</p>
+    <table class="tbl">
+      <thead><tr><th>Endpoint</th><th>Returns</th></tr></thead>
+      <tbody>
+        <tr><td><code>?api=generate</code></td><td>New inbox address</td></tr>
+        <tr><td><code>?api=messages&amp;address=x</code></td><td>Messages for address</td></tr>
+        <tr><td><code>?api=otp&amp;address=x</code></td><td>Extracted OTP code</td></tr>
+        <tr><td><code>?api=wait&amp;address=x&amp;t=60</code></td><td>Long-poll OTP (timeout in seconds)</td></tr>
+        <tr><td><code>?api=inboxes</code></td><td>All session inboxes</td></tr>
+        <tr><td><code>?api=domains</code></td><td>Available domains</td></tr>
+      </tbody>
+    </table>
+    <h3>JS mode</h3>
+    <p>Use the global <code class="inline">window.TempMailAPI</code>:</p>
+    <pre><code><span class="k">const</span> inbox = <span class="k">await</span> TempMailAPI.<span class="v">generate</span>();
+<span class="k">const</span> code  = <span class="k">await</span> TempMailAPI.<span class="v">wait</span>(inbox.address, <span class="s">60</span>);</code></pre>
+    <div class="note">
+      <span class="lbl">ChatGPT plugin</span>
+      <code class="inline">.well-known/ai-plugin.json</code> enables auto-discovery for AI agents.
+    </div>
+
+    <h2 id="config"><span class="hashtag">#</span>Configuration</h2>
+    <pre><code><span class="k">cp</span> js/config.example.js js/config.js</code></pre>
+    <p>Edit <code class="inline">js/config.js</code>:</p>
+    <pre><code><span class="k">export const</span> <span class="v">SB_URL</span> = <span class="s">'https://YOUR_PROJECT_ID.supabase.co'</span>;
+<span class="k">export const</span> <span class="v">SB_ANON_KEY</span> = <span class="s">'YOUR_ANON_KEY_HERE'</span>;</code></pre>
+    <p>Get credentials from <strong>Supabase Dashboard → Project Settings → API</strong>.</p>
+    <div class="note danger">
+      <span class="lbl">Security</span>
+      The anon key is public by design — security comes from Supabase RLS policies, not key secrecy. Never put <code class="inline">service_role</code> in client code.
+    </div>
+
+    <h2 id="stack"><span class="hashtag">#</span>Tech stack</h2>
+    <table class="tbl">
+      <thead><tr><th>Layer</th><th>Tech</th></tr></thead>
+      <tbody>
+        <tr><td>Frontend</td><td>Vanilla JS (ES modules), CSS custom properties</td></tr>
+        <tr><td>Backend</td><td>Supabase (Postgres + Edge Functions + Realtime)</td></tr>
+        <tr><td>Email routing</td><td>Cloudflare Workers</td></tr>
+        <tr><td>Hosting</td><td>Vercel (static)</td></tr>
+        <tr><td>CDN dependency</td><td><code>@supabase/supabase-js@2</code> via esm.sh</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="architecture"><span class="hashtag">#</span>Architecture</h2>
+    <pre><code>temp-mail/
+├── index.html              <span class="c"># SPA shell</span>
+├── tokens.css              <span class="c"># Design tokens (CSS variables)</span>
+├── agent-api.json          <span class="c"># OpenAPI spec for AI agents</span>
+├── css/
+│   ├── theme.css           <span class="c"># Dark mode, color variables</span>
+│   ├── layout.css          <span class="c"># Grid, cards, responsive</span>
+│   └── components.css      <span class="c"># Buttons, modals, toasts</span>
+├── js/
+│   ├── config.js           <span class="c"># Supabase creds (gitignored)</span>
+│   ├── config.example.js   <span class="c"># Template for config.js</span>
+│   ├── state.js            <span class="c"># localStorage state management</span>
+│   ├── api.js              <span class="c"># Supabase client, CRUD, realtime</span>
+│   ├── otp.js              <span class="c"># OTP extraction engine</span>
+│   ├── sanitizer.js        <span class="c"># XSS-safe HTML rendering</span>
+│   ├── ui.js               <span class="c"># DOM, events, keyboard shortcuts</span>
+│   ├── agent-api.js        <span class="c"># window.TempMailAPI</span>
+│   └── app.js              <span class="c"># Init, polling, wiring</span>
+├── test/otp.test.mjs       <span class="c"># 15 tests, all passing</span>
+└── .well-known/ai-plugin.json</code></pre>
+
+    <h2 id="otp"><span class="hashtag">#</span>OTP extraction</h2>
+    <p>The extractor handles 4–8 digit codes, <code class="inline">"Your code is X"</code>, <code class="inline">"OTP: X"</code>, <code class="inline">"PIN: X"</code>, bare 6-digit fallbacks, HTML-stripped matching and verification-link extraction.</p>
+    <pre><code><span class="k">npm</span> test    <span class="c"># 15/15 passing</span></code></pre>
+
+    <h2 id="deploy"><span class="hashtag">#</span>Deployment</h2>
+    <h3>Vercel</h3>
+    <pre><code><span class="k">npm</span> i -g vercel
+<span class="k">vercel</span> --prod</code></pre>
+    <p>Any static host works — Netlify, Cloudflare Pages, S3, GitHub Pages. No build step required.</p>
+
+    <h2 id="shortcuts"><span class="hashtag">#</span>Keyboard shortcuts</h2>
+    <table class="tbl">
+      <thead><tr><th>Key</th><th>Action</th></tr></thead>
+      <tbody>
+        <tr><td><code>N</code></td><td>New inbox</td></tr>
+        <tr><td><code>R</code></td><td>Refresh</td></tr>
+        <tr><td><code>C</code></td><td>Copy address</td></tr>
+        <tr><td><code>D</code></td><td>Delete inbox</td></tr>
+        <tr><td><code>/</code></td><td>Search</td></tr>
+        <tr><td><code>Esc</code></td><td>Close modal</td></tr>
+      </tbody>
+    </table>
+
+    <div class="hero-cta" style="margin-top:36px">
+      <a class="btn primary" href="https://github.com/xscope0/Ghostbox" target="_blank" rel="noopener">View repository ↗</a>
+      <a class="btn" href="./index.html">← Back to projects</a>
+    </div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div class="wrap">
+    <span>© <span class="yr"></span> xscope0 — docs</span>
+    <span><a href="https://github.com/xscope0/Ghostbox" target="_blank" rel="noopener">Ghostbox</a></span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll('.yr').forEach(e=>e.textContent=new Date().getFullYear());</script>
+<script src="./assets/main.js"></script>
+</body>
+</html>
